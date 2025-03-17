@@ -34,13 +34,24 @@ public class UserService {
 
     }
 
-    public void saveNewUser(Users user) {
+    public boolean saveNewUser(Users user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        user.setRoles(List.of("USER"));
+        try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.save(user);
+            user.setRoles(List.of("USER"));
+
+            Users savedUser = userRepository.save(user);
+
+            if (user != null) {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
     public void saveNewAdmin(Users user) {

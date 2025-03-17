@@ -8,6 +8,9 @@ class JournalApplicationTests {
 
 	@Test
 	void contextLoads() {
+
+		assert true;
+
 	}
 
 }
