@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
-public class UserDetailsServiceImplTestUsingMockBean {
+class UserDetailsServiceImplTestUsingMockBean {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -34,7 +34,7 @@ public class UserDetailsServiceImplTestUsingMockBean {
     }
 
     @Test
-    public void testLoadUserByUsername() {
+    void testLoadUserByUsername() {
 
         when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Users.builder().username("admin").password("admin").roles(List.of("USER")).build());
 
