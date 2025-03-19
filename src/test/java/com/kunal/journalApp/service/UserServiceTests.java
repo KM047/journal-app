@@ -51,13 +51,13 @@ public class UserServiceTests {
 //    public void createNewUserTest(Users user) {
 //        assertTrue(userService.saveNewUser(user), "Error while creating new user");
 //    }
-//
-//    @ParameterizedTest
-//    @CsvSource(value = {
-//            "1, 2, 3",
-//            "2, 3, 5",
-//            "3, 4, 7"
-//    })
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1, 2, 3",
+            "2, 3, 5",
+            "3, 4, 7"
+    })
     public void test(int a, int b, int result) {
         assertEquals(result, a + b, "The result is not correct for " + a + " + " + b + " = " + result);
     }
