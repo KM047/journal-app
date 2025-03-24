@@ -1,8 +1,8 @@
 package com.kunal.journalApp.controllers;
 
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.cache.AppCache;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.service.UserService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,15 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AppCache appCache;
 
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {
 
         try {
 
-            List<Users> allUsers = userService.getAllUsers();
+            List<UsersModel> allUsers = userService.getAllUsers();
 
             if (!allUsers.isEmpty()) {
 
@@ -46,7 +48,7 @@ public class AdminController {
     }
 
     @PostMapping("/add-admin")
-    public ResponseEntity<?> createNewAdmin(@RequestBody Users user) {
+    public ResponseEntity<?> createNewAdmin(@RequestBody UsersModel user) {
 
         try {
             userService.saveNewAdmin(user);
@@ -80,6 +82,19 @@ public class AdminController {
         } catch (Exception e) {
             throw new RuntimeException("Error while getting all users", e);
         }
+    }
+
+
+    @GetMapping("/clear-cache")
+    public void clearAppCache() {
+
+        try {
+            appCache.init();
+            System.out.println("Cache cleared successfully");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while clearing app cache", e);
+        }
+
     }
 
 

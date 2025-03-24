@@ -1,6 +1,6 @@
 package com.kunal.journalApp.service;
 
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Users user = userRepository.findByUsername(username);
+        UsersModel user = userRepository.findByUsername(username);
 
         if (user != null) {
 

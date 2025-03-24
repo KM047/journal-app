@@ -1,5 +1,6 @@
 package com.kunal.journalApp.models;
 
+import com.kunal.journalApp.constants.Sentiment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JournalEntry {
+public class JournalEntryModel {
 
     @Id
     private ObjectId id;
@@ -24,4 +25,5 @@ public class JournalEntry {
     @NonNull
     private String content;
     private LocalDateTime date;
+    private Sentiment sentiment;
 }

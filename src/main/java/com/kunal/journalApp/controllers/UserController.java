@@ -1,18 +1,18 @@
 package com.kunal.journalApp.controllers;
 
 
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.api.response.WeatherResponse;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.service.UserService;
+import com.kunal.journalApp.service.WeatherService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,10 +23,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WeatherService weatherService;
+
     @GetMapping("/u/{id}")
     public ResponseEntity<?> findUserByID(@PathVariable("id") ObjectId userID) {
 
-        Optional<Users> user = userService.findByID(userID);
+        Optional<UsersModel> user = userService.findByID(userID);
 
         if (user.isEmpty()) {
 
@@ -59,7 +62,7 @@ public class UserController {
 
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody Users user) {
+    public ResponseEntity<?> updateUser(@RequestBody UsersModel user) {
 
         try {
 
@@ -67,7 +70,7 @@ public class UserController {
 
             String username = authentication.getName();
 
-            Users userInDB = userService.findByUsername(username);
+            UsersModel userInDB = userService.findByUsername(username);
 
             userInDB.setUsername(user.getUsername() != null ? user.getUsername() : userInDB.getUsername());
             userInDB.setPassword(user.getPassword() != null ? user.getPassword() : userInDB.getPassword());
@@ -84,6 +87,30 @@ public class UserController {
                     HttpStatus.BAD_REQUEST
             );
         }
+    }
+    
+    @GetMapping
+    public ResponseEntity<?> getUser()  {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        WeatherResponse weatherResponse = weatherService.getWeather("Vaduj");
+
+        if (weatherResponse != null) {
+
+            return new ResponseEntity<>(
+                    username + " Welcome you weather feels like " +weatherResponse.getCurrent().getTemperature(),
+                    HttpStatus.OK
+            );
+        }
+
+
+        return new ResponseEntity<>(
+                " Welcome " + username,
+                HttpStatus.OK
+        );
     }
 
 

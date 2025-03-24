@@ -1,7 +1,7 @@
 package com.kunal.journalApp.service;
 
-import com.kunal.journalApp.models.JournalEntry;
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.models.JournalEntryModel;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.repository.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,14 @@ public class JournalEntryService {
     UserService userService;
 
     @Transactional
-    public void saveEntry(JournalEntry journalEntry, String username) {
+    public void saveEntry(JournalEntryModel journalEntryModel, String username) {
 
         try {
-            journalEntry.setDate(LocalDateTime.now());
+            journalEntryModel.setDate(LocalDateTime.now());
 
-            JournalEntry savedEntry = journalEntryRepository.save(journalEntry);
+            JournalEntryModel savedEntry = journalEntryRepository.save(journalEntryModel);
 
-            Users user = userService.findByUsername(username);
+            UsersModel user = userService.findByUsername(username);
 
             user.getJournalEntries().add(savedEntry);
 
@@ -39,24 +39,24 @@ public class JournalEntryService {
         }
     }
 
-    public void saveEntry(JournalEntry journalEntry) {
+    public void saveEntry(JournalEntryModel journalEntryModel) {
 
         try {
-            journalEntry.setDate(LocalDateTime.now());
+            journalEntryModel.setDate(LocalDateTime.now());
 
-            JournalEntry savedEntry = journalEntryRepository.save(journalEntry);
+            JournalEntryModel savedEntry = journalEntryRepository.save(journalEntryModel);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public List<JournalEntry> getAllJournalEntries() {
+    public List<JournalEntryModel> getAllJournalEntries() {
 
         return journalEntryRepository.findAll();
 
     }
 
-    public Optional<JournalEntry> getJournalByID(ObjectId journalID) {
+    public Optional<JournalEntryModel> getJournalByID(ObjectId journalID) {
         return journalEntryRepository.findById(journalID);
 
     }
@@ -66,9 +66,9 @@ public class JournalEntryService {
         boolean removed = false;
 
         try {
-            Users user = userService.findByUsername(username);
+            UsersModel user = userService.findByUsername(username);
 
-            removed = user.getJournalEntries().removeIf(journalEntry -> journalEntry.getId().equals(journalID));
+            removed = user.getJournalEntries().removeIf(journalEntryModel -> journalEntryModel.getId().equals(journalID));
 
             userService.saveUser(user);
 

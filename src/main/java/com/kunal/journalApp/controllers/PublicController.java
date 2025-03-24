@@ -1,11 +1,8 @@
 package com.kunal.journalApp.controllers;
 
-import com.kunal.journalApp.models.Users;
-import com.kunal.journalApp.service.JournalEntryService;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +42,7 @@ public class PublicController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody Users user) {
+    public ResponseEntity<?> createUser(@RequestBody UsersModel user) {
 
         try {
             userService.saveNewUser(user);

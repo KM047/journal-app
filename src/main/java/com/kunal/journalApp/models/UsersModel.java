@@ -16,18 +16,23 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
+public class UsersModel {
 
     @Id
     private ObjectId id;
     @Indexed(unique = true)  // For this you have to enable index in application.properties file "spring.data.mongodb.auto-index-creation=true"
     @NonNull
     private String username;
+    @Indexed(unique = true)
+    @NonNull
+    private String email;
     @NonNull
     private String password;
 
+    private boolean sentimentAnalysis;
+
     @DBRef
-    private List<JournalEntry> journalEntries = new ArrayList<>();
+    private List<JournalEntryModel> journalEntries = new ArrayList<>();
 
     private List<String> roles;
 

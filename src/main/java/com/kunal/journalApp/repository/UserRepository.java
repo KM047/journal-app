@@ -1,14 +1,14 @@
 package com.kunal.journalApp.repository;
 
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.models.UsersModel;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends MongoRepository<Users, ObjectId> {
+public interface UserRepository extends MongoRepository<UsersModel, ObjectId> {
 
-    Users findByUsername(String username);
+    UsersModel findByUsername(String username);
 
 
     void deleteByUsername(String username);

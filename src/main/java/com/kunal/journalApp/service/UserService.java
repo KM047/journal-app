@@ -1,6 +1,6 @@
 package com.kunal.journalApp.service;
 
-import com.kunal.journalApp.models.Users;
+import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -25,18 +25,18 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public List<Users> getAllUsers() {
+    public List<UsersModel> getAllUsers() {
         return userRepository.findAll();
     }
 
 
-    public void saveUser(Users user) {
+    public void saveUser(UsersModel user) {
 
-        Users savedUser = userRepository.save(user);
+        UsersModel savedUser = userRepository.save(user);
 
     }
 
-    public boolean saveNewUser(Users user) {
+    public boolean saveNewUser(UsersModel user) {
 
 
         try {
@@ -44,7 +44,7 @@ public class UserService {
 
             user.setRoles(List.of("USER"));
 
-            Users savedUser = userRepository.save(user);
+            UsersModel savedUser = userRepository.save(user);
 
             if (user != null) {
                 return true;
@@ -59,7 +59,7 @@ public class UserService {
         return false;
     }
 
-    public void saveNewAdmin(Users user) {
+    public void saveNewAdmin(UsersModel user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -68,7 +68,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<Users> findByID(ObjectId userID) {
+    public Optional<UsersModel> findByID(ObjectId userID) {
         try {
             return userRepository.findById(userID);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class UserService {
     public boolean deleteUserByUsername(String username) {
         try {
 
-            Users user = userRepository.findByUsername(username);
+            UsersModel user = userRepository.findByUsername(username);
 
             if (user == null) {
                 return false;
@@ -95,7 +95,7 @@ public class UserService {
         return true;
     }
 
-    public Users findByUsername(@RequestBody String username) {
+    public UsersModel findByUsername(@RequestBody String username) {
         try {
             return userRepository.findByUsername(username);
         } catch (Exception e) {
