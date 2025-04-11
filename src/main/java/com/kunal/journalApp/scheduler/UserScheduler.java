@@ -3,18 +3,19 @@ package com.kunal.journalApp.scheduler;
 import com.kunal.journalApp.cache.AppCache;
 import com.kunal.journalApp.constants.Sentiment;
 import com.kunal.journalApp.models.JournalEntryModel;
+import com.kunal.journalApp.models.SentimentData;
 import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.repository.UserRepositoryImpl;
 import com.kunal.journalApp.service.EmailSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,9 @@ public class UserScheduler {
     @Autowired
     private AppCache appCache;
 
+    @Autowired
+    private KafkaTemplate<String, SentimentData> kafkaTemplate;
+
     //    @Scheduled(cron = "0 0 9 ? * SUN")
     public void fetchUsersAndSendEmails() {
 
@@ -46,7 +50,9 @@ public class UserScheduler {
             Map<Sentiment, Integer> sentimentCount = new EnumMap<>(Sentiment.class);
 
             for (Sentiment sentiment : sentiments) {
-                sentimentCount.put(sentiment, sentimentCount.getOrDefault(sentiment, 0) + 1);
+                if (sentiment != null) {
+                    sentimentCount.put(sentiment, sentimentCount.getOrDefault(sentiment, 0) + 1);
+                }
             }
 
             Sentiment mostFrequentSentiment = null;
@@ -59,8 +65,16 @@ public class UserScheduler {
             }
 
             if (mostFrequentSentiment != null) {
-                emailSenderService.sendEmail(user.getEmail(), "Sentiment for last 7 days", "Your most frequent sentiment is " + mostFrequentSentiment.toString());
-                log.info("Email send to {} for sentiment analysis for last 7 days", user.getEmail());
+
+                SentimentData sentimentData = SentimentData.builder().email(user.getEmail()).sentiment("Sentiment for last 7 days " + mostFrequentSentiment).build();
+
+                try {
+                    kafkaTemplate.send("default_topic", sentimentData.getEmail(), sentimentData);
+
+                } catch (Exception e) {
+                    emailSenderService.sendEmail(user.getEmail(), "Sentiment for last 7 days", "Your most frequent sentiment is " + mostFrequentSentiment.toString());
+                    log.info("Email send to {} for sentiment analysis for last 7 days", user.getEmail());
+                }
             }
         }
 

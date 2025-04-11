@@ -34,7 +34,8 @@ build/
 
 ### log files ###
 *.log
-htmlReport/
+
+certs/
 
 
 

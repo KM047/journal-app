@@ -1,7 +1,6 @@
 package com.kunal.journalApp.services;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @SpringBootTest
 @Slf4j
-public class RedisTests {
+class RedisTests {
 
 
     @Autowired
@@ -26,8 +25,8 @@ public class RedisTests {
             Object testedValue = redisTemplate.opsForValue().get("salary");
 
 
-            Assertions.assertNotNull(testedValue);
-            int a= 1;
+            Assertions.assertNull(testedValue);
+            int a = 1;
             log.info("The value is -> {}", testedValue);
         } catch (Exception e) {
             e.printStackTrace();

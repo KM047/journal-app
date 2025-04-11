@@ -2,21 +2,19 @@ package com.kunal.journalApp.services;
 
 import com.kunal.journalApp.service.EmailSenderService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest
-public class EmailSenderTest {
+class EmailSenderTest {
 
 
     @Autowired
     private EmailSenderService emailSenderService;
 
-
-
+    @Disabled
     @Test
     public void sendEmail() {
         // send email

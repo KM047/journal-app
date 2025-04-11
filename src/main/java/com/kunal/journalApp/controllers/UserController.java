@@ -95,6 +95,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String username = authentication.getName();
+        authentication.getAuthorities().forEach(a -> System.out.println(a.getAuthority()));
 
         WeatherResponse weatherResponse = weatherService.getWeather("Vaduj");
 

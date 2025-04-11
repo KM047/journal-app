@@ -1,11 +1,15 @@
 package com.kunal.journalApp.controllers;
 
 import com.kunal.journalApp.models.UsersModel;
+import com.kunal.journalApp.service.JWTService;
 import com.kunal.journalApp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +23,11 @@ public class PublicController {
 
 //    private static final Logger logger = LoggerFactory.getLogger(PublicController.class);
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTService jwtService;
 
     @GetMapping("/health")
     public String healthCheck() {
@@ -61,4 +70,30 @@ public class PublicController {
             );
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody UsersModel user) {
+
+        try {
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//
+//            UsersModel byUsername = userService.findByUsername(user.getUsername());
+
+            String token = userService.login(user);
+
+            return new ResponseEntity<>(
+                    token,
+                    HttpStatus.OK
+            );
+
+
+        }catch (Exception e){
+            log.error("Exception occurred while createAuthenticationToken ", e);
+            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
+        }
+
+
+
+    }
+
 }

@@ -66,11 +66,8 @@ public class JournalEntryController {
                         HttpStatus.OK
                 );
             }
-
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-
     }
 
     @PostMapping

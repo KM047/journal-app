@@ -1,10 +1,14 @@
 package com.kunal.journalApp.service;
 
+import com.kunal.journalApp.dto.UserDTO;
 import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,7 +25,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    JournalEntryService journalEntryService;
+    private JournalEntryService journalEntryService;
+
+    @Autowired
+    private AuthenticationManager manager;
+
+    @Autowired
+    private JWTService jwtService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -104,6 +114,33 @@ public class UserService {
 
     }
 
+
+    public String login(UsersModel user) {
+        try {
+
+            Authentication authenticate = manager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+            UsersModel userInDB = userRepository.findByUsername(user.getUsername());
+
+            if (authenticate.isAuthenticated()) {
+
+                UserDTO userDTO = new UserDTO();
+
+                userDTO.setId(userInDB.getId());
+                userDTO.setUsername(userInDB.getUsername());
+                userDTO.setRole(userInDB.getRoles());
+
+                return jwtService.generateToken(userDTO);
+            }
+
+
+        } catch (Exception e) {
+            log.error("Error while logging in user with email {} : ", user.getEmail(), e);
+            throw new RuntimeException("Error while logging in", e);
+        }
+
+        return null;
+    }
 
 
 
