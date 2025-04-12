@@ -16,15 +16,16 @@ import java.util.List;
 public class UserDTO {
 
     private ObjectId id;
-    private String name;
     private String email;
     private String username;
-    private List<String> role;
+    private String password;
+    private List<String> roles;
 
     public UserDTO(UsersModel userModel) {
         this.id = userModel.getId();
         this.email = userModel.getEmail();
         this.username = userModel.getUsername();
-        this.role = userModel.getRoles();
+        this.roles = userModel.getRoles();
+        this.password = userModel.getPassword();
     }
 }

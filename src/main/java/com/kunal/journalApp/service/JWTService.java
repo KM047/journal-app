@@ -37,7 +37,7 @@ public class JWTService {
                 .subject(userDto.getUsername())
                 .add("id", userDto.getId())
                 .add("username", userDto.getUsername())
-                .add("role", userDto.getRole())
+                .add("role", userDto.getRoles())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .and()

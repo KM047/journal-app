@@ -5,6 +5,7 @@ import com.kunal.journalApp.api.response.WeatherResponse;
 import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.service.UserService;
 import com.kunal.journalApp.service.WeatherService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
+@Tag(name = "User APIs", description = "These APIs are used to manage user data.")
 public class UserController {
 
 

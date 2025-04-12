@@ -1,20 +1,21 @@
 package com.kunal.journalApp.controllers;
 
+import com.kunal.journalApp.dto.UserDTO;
 import com.kunal.journalApp.models.UsersModel;
 import com.kunal.journalApp.service.JWTService;
 import com.kunal.journalApp.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/public")
 @Slf4j
+@Tag(name = "Public APIs", description = "These APIs are used to manage public data.")
 public class PublicController {
 
     @Autowired
@@ -51,10 +52,17 @@ public class PublicController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody UsersModel user) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO user) {
 
         try {
-            userService.saveNewUser(user);
+
+            UsersModel newUser = new UsersModel();
+
+            newUser.setEmail(user.getEmail());
+            newUser.setUsername(user.getUsername());
+            newUser.setPassword(user.getPassword());
+
+            userService.saveNewUser(newUser);
 
             return new ResponseEntity<>(
                     user,
@@ -63,7 +71,7 @@ public class PublicController {
 
         } catch (Exception e) {
 
-            log.error("Error while creating for {} :",user.getUsername(),e);
+            log.error("Error while creating for {} :", user.getUsername(), e);
 
             return new ResponseEntity<>(
                     HttpStatus.BAD_REQUEST
@@ -72,7 +80,7 @@ public class PublicController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UsersModel user) {
+    public ResponseEntity<String> loginUser(@RequestBody UserDTO user) {
 
         try {
 //            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -87,11 +95,10 @@ public class PublicController {
             );
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Exception occurred while createAuthenticationToken ", e);
             return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
-
 
 
     }

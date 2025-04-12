@@ -115,7 +115,7 @@ public class UserService {
     }
 
 
-    public String login(UsersModel user) {
+    public String login(UserDTO user) {
         try {
 
             Authentication authenticate = manager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -128,7 +128,7 @@ public class UserService {
 
                 userDTO.setId(userInDB.getId());
                 userDTO.setUsername(userInDB.getUsername());
-                userDTO.setRole(userInDB.getRoles());
+                userDTO.setRoles(userInDB.getRoles());
 
                 return jwtService.generateToken(userDTO);
             }
